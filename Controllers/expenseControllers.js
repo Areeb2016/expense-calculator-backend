@@ -4,7 +4,7 @@ const Expense = require("../models/expense");
 const getExpenses = async (req, res) => {
   try {
     // Get user-specific expenses
-    const userId = req.userId; // Assuming userId is attached to the request during authentication
+    const userId = req.params.userId; // Assuming userId is attached to the request during authentication
     const expenses = await Expense.find({ user: userId }).sort({
       date: "desc",
     });
@@ -60,8 +60,9 @@ const addExpense = async (req, res) => {
       date,
     });
     await newExpense.save();
-
-    res.status(201).json({ message: "Expense added successfully" });
+    res
+      .status(201)
+      .json({ message: "Expense added successfully", success: true });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
