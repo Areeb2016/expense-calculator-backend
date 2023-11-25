@@ -7,6 +7,9 @@ require("dotenv").config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Handle preflight requests
+app.options("*", cors());
+
 // Middleware
 app.use(bodyParser.json());
 app.use(cors({ origin: "*" }));
