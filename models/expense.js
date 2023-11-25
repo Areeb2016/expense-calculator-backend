@@ -5,6 +5,7 @@ const expenseSchema = new mongoose.Schema({
   amount: Number,
   category: String,
   description: String,
+  name: String,
   date: { type: Date, default: Date.now },
 });
 
