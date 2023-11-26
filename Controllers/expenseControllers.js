@@ -73,7 +73,7 @@ const editExpense = async (req, res) => {
   try {
     const userId = req.userId; // Assuming userId is attached to the request during authentication
     const { id } = req.params;
-    const { amount, category, description, date } = req.body;
+    const { name, amount, category, description, date } = req.body;
 
     // Check if the expense belongs to the user
     const expense = await Expense.findOne({ _id: id, user: userId });
@@ -82,6 +82,7 @@ const editExpense = async (req, res) => {
     }
 
     // Update expense details
+    expense.name = name;
     expense.amount = amount;
     expense.category = category;
     expense.description = description;
@@ -89,7 +90,7 @@ const editExpense = async (req, res) => {
 
     await expense.save();
 
-    res.json({ message: "Expense updated successfully" });
+    res.json({ message: "Expense updated successfully", success: true });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
@@ -110,7 +111,7 @@ const deleteExpense = async (req, res) => {
     // Remove the expense
     await expense.remove();
 
-    res.json({ message: "Expense deleted successfully" });
+    res.json({ message: "Expense deleted successfully", success: true });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
