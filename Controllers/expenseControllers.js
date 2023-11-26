@@ -1,10 +1,8 @@
 const Expense = require("../models/expense");
 
-// Get all expenses of a user
 const getExpenses = async (req, res) => {
   try {
-    // Get user-specific expenses
-    const userId = req.params.id; // Assuming userId is attached to the request during authentication
+    const userId = req.params.id;
     const expenses = await Expense.find({ user: userId }).sort({
       date: "desc",
     });
@@ -14,7 +12,7 @@ const getExpenses = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-// Get all expenses irrespective of users
+
 const getAllExpenses = async (req, res) => {
   try {
     const expenses = await Expense.find().sort({
@@ -26,13 +24,12 @@ const getAllExpenses = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-// Get single expense
+
 const getSingleExpense = async (req, res) => {
   try {
-    const userId = req.userId; // Assuming userId is attached to the request during authentication
+    const userId = req.userId;
     const { id } = req.params;
 
-    // Check if the expense belongs to the user
     const expense = await Expense.findOne({ _id: id, user: userId });
     if (!expense) {
       return res.status(404).json({ message: "Expense not found" });
@@ -48,7 +45,7 @@ const getSingleExpense = async (req, res) => {
 const addExpense = async (req, res) => {
   try {
     const { user, name, amount, category, description, date } = req.body;
-    // Create a new expense
+
     const newExpense = new Expense({
       user: user,
       name,
@@ -72,13 +69,11 @@ const editExpense = async (req, res) => {
     const { id } = req.params;
     const { user, name, amount, category, description, date } = req.body;
 
-    // Check if the expense belongs to the user
     const expense = await Expense.findOne({ _id: id, user: user });
     if (!expense) {
       return res.status(404).json({ message: "Expense not found" });
     }
 
-    // Update expense details
     expense.name = name;
     expense.amount = amount;
     expense.category = category;
@@ -96,15 +91,14 @@ const editExpense = async (req, res) => {
 
 const deleteExpense = async (req, res) => {
   try {
-    const user = req.body.user; // Assuming userId is attached to the request during authentication
+    const user = req.body.user;
     const id = req.params.id;
-    // Check if the expense belongs to the user
+
     const expense = await Expense.findOne({ _id: id, user: user });
     if (!expense) {
       return res.status(404).json({ message: "Expense not found" });
     }
 
-    // Remove the expense
     await expense.deleteOne({ _id: id });
 
     res.json({ message: "Expense deleted successfully", success: true });
