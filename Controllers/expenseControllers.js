@@ -69,12 +69,11 @@ const addExpense = async (req, res) => {
 
 const editExpense = async (req, res) => {
   try {
-    const userId = req.userId; // Assuming userId is attached to the request during authentication
     const { id } = req.params;
-    const { name, amount, category, description, date } = req.body;
+    const { user, name, amount, category, description, date } = req.body;
 
     // Check if the expense belongs to the user
-    const expense = await Expense.findOne({ _id: id, user: userId });
+    const expense = await Expense.findOne({ _id: id, user: user });
     if (!expense) {
       return res.status(404).json({ message: "Expense not found" });
     }
@@ -97,17 +96,16 @@ const editExpense = async (req, res) => {
 
 const deleteExpense = async (req, res) => {
   try {
-    const userId = req.userId; // Assuming userId is attached to the request during authentication
-    const { id } = req.params;
-
+    const user = req.body.user; // Assuming userId is attached to the request during authentication
+    const id = req.params.id;
     // Check if the expense belongs to the user
-    const expense = await Expense.findOne({ _id: id, user: userId });
+    const expense = await Expense.findOne({ _id: id, user: user });
     if (!expense) {
       return res.status(404).json({ message: "Expense not found" });
     }
 
     // Remove the expense
-    await expense.remove();
+    await expense.deleteOne({ _id: id });
 
     res.json({ message: "Expense deleted successfully", success: true });
   } catch (error) {
