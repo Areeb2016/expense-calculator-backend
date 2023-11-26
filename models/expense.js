@@ -7,6 +7,7 @@ const expenseSchema = new mongoose.Schema({
   description: String,
   name: String,
   date: { type: Date, default: Date.now },
+  createdAt: { type: Date, default: Date.now },
 });
 
 module.exports = mongoose.model("Expense", expenseSchema);
