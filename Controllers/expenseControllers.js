@@ -4,7 +4,7 @@ const Expense = require("../models/expense");
 const getExpenses = async (req, res) => {
   try {
     // Get user-specific expenses
-    const userId = req.params.userId; // Assuming userId is attached to the request during authentication
+    const userId = req.params.id; // Assuming userId is attached to the request during authentication
     const expenses = await Expense.find({ user: userId }).sort({
       date: "desc",
     });
@@ -47,12 +47,10 @@ const getSingleExpense = async (req, res) => {
 
 const addExpense = async (req, res) => {
   try {
-    const userId = req.userId; // Assuming userId is attached to the request during authentication
-    const { name, amount, category, description, date } = req.body;
-
+    const { user, name, amount, category, description, date } = req.body;
     // Create a new expense
     const newExpense = new Expense({
-      user: userId,
+      user: user,
       name,
       amount,
       category,
